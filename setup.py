@@ -11,5 +11,6 @@ setup(name='gvSelect',
       author='Simon Gibbons',
       author_email='sljg2@ast.cam.ac.uk',
       url='https://github.com/simongibbons/gvSelect',
-      packages=['gvSelect']
+      packages=['gvSelect'],
+      install_requires=['numpy', 'fortranfile']
      )
