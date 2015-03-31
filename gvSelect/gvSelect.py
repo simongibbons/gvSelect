@@ -70,7 +70,7 @@ class GVSelectFile(object):
             :param filename: The filename to output to
         """
 
-        header = struct.pack( "iiii", 4, _NUM_SELECTIONS, 4, _NUM_SELECTIONS*_NAME_LENGTH )
+        header = struct.pack( "iiii", _ID_SIZE, _NUM_SELECTIONS, _ID_SIZE, _NUM_SELECTIONS*_NAME_LENGTH )
 
         for i in xrange( _NUM_SELECTIONS ):
             header += self._selections[i].name
