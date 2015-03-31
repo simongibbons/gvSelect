@@ -1,5 +1,6 @@
 import fortranfile
 import numpy as np
+import struct
 
 _NUM_SELECTIONS = 6
 _NUM_PTYPES = 6
@@ -15,7 +16,6 @@ class GVSelectFile(object):
 
             :param fname: A string containing the name of the file to read.
         """
-
         if fname is not None:
             self._selections = self._parse_file(fname)
         else:
@@ -64,8 +64,23 @@ class GVSelectFile(object):
         """
         self._selections[selection_id].set_ids(p_type, ids)
 
-    def write_file(self, filename=None):
-        pass
+    def write_file(self, filename):
+        """ Writes the gadgetviewer selection file.
+
+            :param filename: The filename to output to
+        """
+
+        header = struct.pack( "iiii", 4, _NUM_SELECTIONS, 4, _NUM_SELECTIONS*_NAME_LENGTH )
+
+        for i in xrange( _NUM_SELECTIONS ):
+            header += self._selections[i].name
+
+        header += struct.pack("i", _NUM_SELECTIONS*_NAME_LENGTH)
+
+        body_outs = [self._selections[i].make_output() for i in xrange(_NUM_SELECTIONS)]
+        body = np.array( np.concatenate( body_outs ), dtype=_ID_TYPE).tostring()
+
+        fout = open(filename, 'wb').write(header + body)
 
 class GVSelection(object):
     def __init__(self, name=""):
